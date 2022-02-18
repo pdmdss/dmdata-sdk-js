@@ -3,6 +3,7 @@ import { Client } from './client';
 import { ContractService } from './service/contract';
 import { SocketService } from './service/socket';
 import { TelegramBodyService, TelegramService } from './service/telegram';
+import { ParameterService } from './service/parameter';
 import { GDEarthquakeService } from './service/gd.earthquake';
 import { GDEewService } from './service/gd.eew';
 
@@ -60,6 +61,15 @@ export class DMDATA extends Client {
       this,
       {
         endpoint: this.getEndpoint('telegram/body')
+      }
+    );
+  }
+
+  get parameter() {
+    return new ParameterService(
+      this,
+      {
+        endpoint: this.getEndpoint('parameter')
       }
     );
   }

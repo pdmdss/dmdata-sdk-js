@@ -14,7 +14,7 @@ export namespace DMDATA {
   export  type Services = typeof SERVICES[number];
 
   export interface Option extends Client.Option {
-    endpoints: {
+    endpoints?: {
       [key in Services]: string;
     };
   }
@@ -80,6 +80,6 @@ export class DMDATA extends Client {
   }
 
   getEndpoint(serverName: DMDATA.Services) {
-    return this.option.endpoints?.[serverName] ?? ENDPOINTS.get(serverName);
+    return this.option.endpoints?.[serverName] ?? ENDPOINTS.get(serverName)!;
   }
 }

@@ -11,7 +11,7 @@ export class ContractService {
   }
 
 
-  list(params: APITypes.ContractList.QueryParams) {
+  list(params?: APITypes.ContractList.QueryParams) {
     return this.context.request<APITypes.ContractList.ResponseOk>({
       method: 'get',
       url: this.option.endpoint,

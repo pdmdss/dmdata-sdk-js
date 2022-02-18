@@ -1,33 +1,23 @@
-import type { WebSocket as NodeWebSocket } from 'ws';
-import { Events } from './events';
+import { Events } from '../events';
+import { WebSocketInterface } from './interface';
 
 export interface WebSocketMessage {
   data: string | ArrayBuffer | ArrayBuffer[];
 }
 
-export class WebSocketClient extends Events {
+export class WebSocketClient extends Events implements WebSocketInterface {
   static readonly CONNECTING: 0;
   static readonly OPEN: 1;
   static readonly CLOSING: 2;
   static readonly CLOSED: 3;
 
-  private constructor(private ws: globalThis.WebSocket | NodeWebSocket) {
+  private constructor(private ws: WebSocket) {
     super();
-
-    if (typeof globalThis.WebSocket === 'function' && this.ws instanceof globalThis.WebSocket) {
-      this.ws.addEventListener('message', data => {
-        this.emit('message', { data: data.data });
-      });
-      this.ws.addEventListener('open', () => this.emit('open'));
-      this.ws.addEventListener('close', close => this.emit('close', close.code));
-    } else if ('on' in this.ws) {
-      this.ws.addEventListener('message', data => {
-        this.emit('message', { data: data.data });
-      });
-      this.ws.addEventListener('open', () => this.emit('open'));
-      this.ws.addEventListener('close', close => this.emit('close', close.code));
-      this.ws.addEventListener('error', error => this.emit('error', error));
-    }
+    this.ws.addEventListener('message', data => {
+      this.emit('message', { data: data.data });
+    });
+    this.ws.addEventListener('open', () => this.emit('open'));
+    this.ws.addEventListener('close', close => this.emit('close', close.code));
   }
 
   get binaryType() {
@@ -46,14 +36,8 @@ export class WebSocketClient extends Events {
     return this.ws.url;
   }
 
-  static async open(url: string, protocol?: string) {
-    if (typeof globalThis.WebSocket === 'function' && globalThis.WebSocket.name === 'WebSocket') {
-      const WS = globalThis.WebSocket;
-
-      return new WebSocketClient(new WS(url, protocol));
-    }
-
-    return new WebSocketClient(new (await import('ws')).WebSocket(url, { protocol }));
+  static async open(url: string, protocols?: string | string[]) {
+    return new WebSocketClient(new WebSocket(url, protocols));
   }
 
   emit(event: 'message', data: WebSocketMessage): boolean;

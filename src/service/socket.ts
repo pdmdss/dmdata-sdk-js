@@ -25,7 +25,7 @@ export class SocketService {
                );
   }
 
-  list(params: APITypes.SocketList.QueryParams) {
+  list(params?: APITypes.SocketList.QueryParams) {
     return this.context.request<APITypes.SocketList.ResponseOk>({
       method: 'get',
       url: this.option.endpoint,

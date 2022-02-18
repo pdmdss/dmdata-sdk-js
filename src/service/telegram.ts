@@ -12,7 +12,7 @@ export class TelegramService {
   }
 
 
-  list(params: APITypes.TelegramList.QueryParams = {}) {
+  list(params?: APITypes.TelegramList.QueryParams) {
     return this.context.request<APITypes.TelegramList.ResponseOk>({
       method: 'get',
       url: this.option.endpoint,

@@ -7,7 +7,7 @@ export class WebSocketService extends Events {
     super();
 
     this.websocket.on('message', ({ data }) => this.onMessage(data));
-    this.websocket.on('close', (code) => this.emit('close', code));
+    this.websocket.on('close', code => this.emit('close', code));
 
     this.on('ping', ({ pingId }) => this.send({ type: 'pong', pingId }));
   }
@@ -36,6 +36,26 @@ export class WebSocketService extends Events {
   once(event: 'close', listener: (code: number) => void): this;
   once(event: string, listener: (...args: any[]) => void): this {
     return super.once(event, listener);
+  }
+
+  get binaryType() {
+    return this.websocket.binaryType;
+  }
+
+  get protocol() {
+    return this.websocket.protocol;
+  }
+
+  get readyState() {
+    return this.websocket.readyState;
+  }
+
+  get url() {
+    return this.websocket.url;
+  }
+
+  close(code?: number) {
+    return this.websocket.close(code);
   }
 
   private send(msg: APITypes.WebSocketV2.Event.All) {

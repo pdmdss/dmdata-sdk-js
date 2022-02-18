@@ -6,6 +6,9 @@ import { TelegramBodyService, TelegramService } from './service/telegram';
 import { GDEarthquakeService } from './service/gd.earthquake';
 import { GDEewService } from './service/gd.eew';
 
+import { WebSocketClient } from './lib/websocket';
+import { Events } from './lib/events';
+
 import { SERVICES } from './sercices';
 import { ENDPOINTS } from './endpoints';
 
@@ -83,3 +86,17 @@ export class DMDATA extends Client {
     return this.option.endpoints?.[serverName] ?? ENDPOINTS.get(serverName)!;
   }
 }
+
+export {
+  Client,
+  ContractService,
+  SocketService,
+  TelegramBodyService,
+  TelegramService,
+  GDEarthquakeService,
+  GDEewService,
+  WebSocketClient,
+  Events,
+  SERVICES,
+  ENDPOINTS
+};

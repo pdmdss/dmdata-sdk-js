@@ -11,7 +11,7 @@ export class GDEewService {
   }
 
 
-  list(params: APITypes.GDEewList.QueryParams = {}) {
+  list(params?: APITypes.GDEewList.QueryParams) {
     return this.context.request<APITypes.GDEewList.ResponseOk>({
       method: 'get',
       url: this.option.endpoint,
@@ -23,7 +23,8 @@ export class GDEewService {
   event(id: string) {
     return this.context.request<APITypes.GDEewEvent.ResponseOk>({
       method: 'get',
-      url: `${this.option.endpoint}/${id}`
+      baseURL: this.option.endpoint,
+      url: id
     });
   }
 }

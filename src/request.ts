@@ -51,8 +51,6 @@ export class Request extends Events {
 
   setAuthorizationContext(context: Request.Authorization) {
     this.authContext = context;
-
-    axios.interceptors.request.use();
   }
 
   /**+
@@ -71,7 +69,9 @@ export class Request extends Events {
     const headers = config.headers ??= {};
     const queryParams = config.params ??= {};
 
-    config.url ??= config.baseURL;
+    const url = new URL(config.url ?? '', config.baseURL ? `${config.baseURL}/` : undefined);
+
+    config.url = url.toString();
 
     if (this.authContext) {
       headers.authorization = await this.authContext.getAuthorization();
@@ -79,7 +79,7 @@ export class Request extends Events {
       if (typeof this.authContext.getDPoPProofJWT === 'function') {
         const dpop = await this.authContext.getDPoPProofJWT(
           config.method?.toUpperCase() ?? 'GET',
-          config.url ?? config.baseURL ?? '',
+          config.url,
           this.dpopNonce
         );
 

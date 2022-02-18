@@ -11,7 +11,7 @@ export class GDEarthquakeService {
   }
 
 
-  list(params: APITypes.GDEarthquakeList.QueryParams = {}) {
+  list(params?: APITypes.GDEarthquakeList.QueryParams) {
     return this.context.request<APITypes.GDEarthquakeList.ResponseOk>({
       method: 'get',
       url: this.option.endpoint,
@@ -23,7 +23,8 @@ export class GDEarthquakeService {
   event(id: string) {
     return this.context.request<APITypes.GDEarthquakeEvent.ResponseOk>({
       method: 'get',
-      url: `${this.option.endpoint}/${id}`
+      baseURL: this.option.endpoint,
+      url: id
     });
   }
 }

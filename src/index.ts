@@ -1,11 +1,12 @@
 import { Client } from './client';
 
 import { ContractService } from './service/contract';
-import { SocketService } from './service/socket';
-import { TelegramBodyService, TelegramService } from './service/telegram';
-import { ParameterService } from './service/parameter';
 import { GDEarthquakeService } from './service/gd.earthquake';
 import { GDEewService } from './service/gd.eew';
+import { ParameterService } from './service/parameter';
+import { SocketService } from './service/socket';
+import { TelegramBodyService, TelegramService } from './service/telegram';
+import { WebSocketService } from './service/websocket';
 
 import { WebSocketClient } from './lib/websocket';
 import { Events } from './lib/events';
@@ -100,11 +101,13 @@ export class DMDATA extends Client {
 export {
   Client,
   ContractService,
+  GDEarthquakeService,
+  GDEewService,
+  ParameterService,
   SocketService,
   TelegramBodyService,
   TelegramService,
-  GDEarthquakeService,
-  GDEewService,
+  WebSocketService,
   WebSocketClient,
   Events,
   SERVICES,

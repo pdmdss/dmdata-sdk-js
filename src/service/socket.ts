@@ -20,9 +20,9 @@ export class SocketService {
         'content-type': 'application/json'
       }
     })
-               .then(data =>
-                 WebSocketService.open(data.websocket.url, data.websocket.protocol[0])
-               );
+      .then(({ data }) =>
+        WebSocketService.open(data.websocket.url, data.websocket.protocol[0])
+      );
   }
 
   list(params?: APITypes.SocketList.QueryParams) {

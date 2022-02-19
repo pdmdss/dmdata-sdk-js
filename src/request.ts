@@ -57,11 +57,8 @@ export class Request extends Events {
    * @internal
    * @param config
    */
-  request<T = any, D = any>(config: AxiosRequestConfig<D>) {
-    const request = this.instance.request<T>(config);
-
-    return request
-      .then(res => res.data)
+  request<T = any, D = any>(config: AxiosRequestConfig<D>): Promise<AxiosResponse<T>> {
+    return this.axiosRequest(config)
       .catch(error => this.errorHandling<T, D>(error));
   }
 
@@ -114,15 +111,19 @@ export class Request extends Events {
     return response;
   }
 
-  private errorHandling<T = any, D = any>(error: AxiosError<T, D>): Promise<T> {
+  private errorHandling<T = any, D = any>(error: AxiosError<T, D>): Promise<AxiosResponse<T>> {
     if (typeof error.response === 'object') {
       const { headers, status } = error.response;
 
       if (status === 401 && headers['dpop-nonce']) {
-        return this.request<T, D>(error.config);
+        return this.axiosRequest<T, D>(error.config);
       }
     }
 
     return Promise.reject(error);
+  }
+
+  private axiosRequest<T = any, D = any>(config: AxiosRequestConfig<D>): Promise<AxiosResponse<T>> {
+    return this.instance.request<T>(config);
   }
 }

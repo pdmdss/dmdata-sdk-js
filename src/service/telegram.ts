@@ -27,7 +27,7 @@ export class TelegramBodyService {
 
 
   get(id: string) {
-    return this.context.request<APITypes.TelegramList.ResponseOk>({
+    return this.context.request<any>({
       method: 'get',
       baseURL: this.option.endpoint,
       url: id

@@ -25,7 +25,7 @@ export namespace DMDATA {
 }
 
 export class DMDATA extends Client {
-  constructor(protected option: DMDATA.Option) {
+  constructor(protected option: DMDATA.Option = {}) {
     super(option);
   }
 

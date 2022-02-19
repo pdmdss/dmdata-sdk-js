@@ -6,10 +6,10 @@ export interface WebSocketMessage {
 }
 
 export class WebSocketClient extends Events implements WebSocketInterface {
-  static readonly CONNECTING: 0;
-  static readonly OPEN: 1;
-  static readonly CLOSING: 2;
-  static readonly CLOSED: 3;
+  static readonly CONNECTING = 0;
+  static readonly OPEN = 1;
+  static readonly CLOSING = 2;
+  static readonly CLOSED = 3;
 
   private constructor(private ws: WebSocket) {
     super();

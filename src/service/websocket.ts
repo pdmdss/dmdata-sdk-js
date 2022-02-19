@@ -3,10 +3,10 @@ import { Events } from '../lib/events';
 import { WebSocketClient } from '../lib/websocket';
 
 export class WebSocketService extends Events {
-  static readonly CONNECTING: 0;
-  static readonly OPEN: 1;
-  static readonly CLOSING: 2;
-  static readonly CLOSED: 3;
+  static readonly CONNECTING = 0;
+  static readonly OPEN = 1;
+  static readonly CLOSING = 2;
+  static readonly CLOSED = 3;
 
   private constructor(private websocket: WebSocketClient) {
     super();

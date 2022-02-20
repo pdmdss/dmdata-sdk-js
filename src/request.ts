@@ -44,8 +44,8 @@ export class Request extends Events {
       config => this.configUse(config)
     );
     this.instance.interceptors.response.use(
-      response => this.responseUse(response, false),
-      response => this.responseUse(response, true)
+      response => this.responseUse(response),
+      (error: AxiosError) => this.responseUse(error)
     );
   }
 
@@ -99,15 +99,15 @@ export class Request extends Events {
     return config;
   }
 
-  private async responseUse(response: AxiosResponse, isError: boolean) {
-    const headers = response.headers ?? {};
+  private async responseUse(response: AxiosResponse | AxiosError) {
+    const headers = response instanceof Error ? response.response?.headers : response.headers;
     const url = new URL(response.config.url ?? '');
 
-    if (typeof headers['dpop-nonce'] === 'string') {
+    if (typeof headers?.['dpop-nonce'] === 'string') {
       this.dpopNonceDomains.set(url.hostname, headers['dpop-nonce']);
     }
 
-    if (isError) {
+    if (response instanceof Error) {
       return Promise.reject(response);
     }
 

@@ -19,7 +19,7 @@ export declare namespace Request {
 }
 
 export class Request extends Events {
-  private dpopNonce?: string;
+  private dpopNonceDomains = new Map<string, string>();
   private authContext?: Request.Authorization;
   private instance: AxiosInstance;
 
@@ -74,10 +74,12 @@ export class Request extends Events {
       headers.authorization = await this.authContext.getAuthorization();
 
       if (typeof this.authContext.getDPoPProofJWT === 'function') {
+        const dpopNonce = this.dpopNonceDomains.get(url.hostname);
+
         const dpop = await this.authContext.getDPoPProofJWT(
           config.method?.toUpperCase() ?? 'GET',
           config.url,
-          this.dpopNonce
+          dpopNonce
         );
 
         if (typeof dpop === 'string') {
@@ -99,9 +101,10 @@ export class Request extends Events {
 
   private async responseUse(response: AxiosResponse, isError: boolean) {
     const headers = response.headers ?? {};
+    const url = new URL(response.config.url ?? '');
 
     if (typeof headers['dpop-nonce'] === 'string') {
-      this.dpopNonce = headers['dpop-nonce'];
+      this.dpopNonceDomains.set(url.hostname, headers['dpop-nonce']);
     }
 
     if (isError) {

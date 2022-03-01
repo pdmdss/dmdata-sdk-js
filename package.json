@@ -1,6 +1,6 @@
 {
   "name": "@dmdata/sdk-js",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "scripts": {
     "prepublishOnly": "npx tsc && npx tsc --project ./tsconfig.esm.json",
     "publish:prod": "npm publish --access=public"

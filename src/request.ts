@@ -22,6 +22,7 @@ export class Request extends Events {
   private dpopNonceDomains = new Map<string, string>();
   private authContext?: Request.Authorization;
   private instance: AxiosInstance;
+  private waitRequests: { config: AxiosRequestConfig; requestId: symbol; }[] = [];
 
   constructor(protected option: Request.Option) {
     super();
@@ -53,13 +54,64 @@ export class Request extends Events {
     this.authContext = context;
   }
 
+  on(event: 'response', listener: (response: AxiosResponse | AxiosError, responseId: symbol) => void): this;
+  on(event: string, listener: (...args: any[]) => void): this {
+    return super.on(event, listener);
+  }
+
   /**+
    * @internal
    * @param config
    */
   request<T = any, D = any>(config: AxiosRequestConfig<D>): Promise<AxiosResponse<T>> {
-    return this.axiosRequest(config)
-      .catch(error => this.errorHandling<T, D>(error));
+    const requestId = Symbol();
+
+    this.sequentialRequest(config, requestId);
+
+    return new Promise((resolve, reject) => {
+        const listener = (response: AxiosResponse | AxiosError, responseId: symbol) => {
+          if (requestId !== responseId) {
+            return;
+          }
+
+          if (response instanceof Error) {
+            reject(response);
+          } else {
+            resolve(response);
+          }
+
+          this.removeListener('response', listener);
+        };
+
+        this.on('response', listener);
+      }
+    );
+  }
+
+  private sequentialRequest(config?: AxiosRequestConfig, requestId?: symbol) {
+    if (config && requestId) {
+      this.waitRequests.push({ config, requestId });
+
+      if (this.waitRequests.length > 1) {
+        return;
+      }
+    }
+    const request = this.waitRequests[0];
+
+    if (!request) {
+      return;
+    }
+
+    this.axiosRequest(request.config)
+      .catch(error => this.errorHandling(error))
+      .then(
+        response => this.emit('response', response, request.requestId),
+        (error: AxiosError) => this.emit('response', error, request.requestId)
+      )
+      .finally(() => {
+        this.waitRequests.shift();
+        this.sequentialRequest();
+      });
   }
 
   private async configUse(config: AxiosRequestConfig) {

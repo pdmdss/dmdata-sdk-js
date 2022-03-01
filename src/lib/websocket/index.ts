@@ -15,12 +15,10 @@ export class WebSocketClient extends Events implements WebSocketInterface {
   private constructor(private ws: WebSocket) {
     super();
 
-    this.ws.addEventListener('message', data => {
-      this.emit('message', { data: data.data });
-    });
-    this.ws.addEventListener('open', () => this.emit('open'));
-    this.ws.addEventListener('close', close => this.emit('close', close.code));
-    this.ws.addEventListener('error', error => this.emit('error', error));
+    this.ws.on('message', data => this.emit('message', { data }));
+    this.ws.on('open', () => this.emit('open'));
+    this.ws.on('close', code => this.emit('close', code));
+    this.ws.on('error', error => this.emit('error', error));
   }
 
   get binaryType() {

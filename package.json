@@ -25,17 +25,16 @@
     "./dist/esm/lib/websocket.js": "./dist/esm/lib/websocket/browser.js"
   },
   "devDependencies": {
-    "@types/node": "^14.18.9",
     "@dmdata/api-types": "^1.1.13",
-    "@types/superagent": "^4.1.14",
-    "@types/ws": "^8.2.2",
+    "@types/node": "^16.11.26",
+    "@types/ws": "^8.5.1",
     "axios": "^0.26.0",
-    "ts-node": "^10.4.0",
+    "ts-node": "^10.5.0",
     "typescript": "^4.5.5",
-    "ws": "^8.4.2"
+    "ws": "^8.5.0"
   },
   "peerDependencies": {
-    "axios": "^0.26.0",
-    "@dmdata/api-types": "1.1.x"
+    "@dmdata/api-types": "1.1.x",
+    "axios": "^0.26.0"
   }
 }

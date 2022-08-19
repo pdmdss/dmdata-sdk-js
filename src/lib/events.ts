@@ -5,8 +5,7 @@ export class Events {
   }
 
   addListener(event: string, listener: (...args: any[]) => void): this {
-    this.getHandlers(event)
-        .add(listener);
+    this.getHandlers(event).add(listener);
 
     return this;
   }
@@ -19,10 +18,12 @@ export class Events {
     }
 
     handlers.forEach(handler =>
-      setTimeout(
-        () => Reflect.apply(handler, this, args),
-        0
-      )
+      typeof globalThis.process === 'undefined' ?
+        setTimeout(
+          () => Reflect.apply(handler, this, args),
+          0
+        ) :
+        process.nextTick(() => Reflect.apply(handler, this, args))
     );
 
     return true;
@@ -39,7 +40,7 @@ export class Events {
   listeners(event: string): Function[] {
     return [
       ...this.getHandlers(event)
-             .values()
+        .values()
     ];
   }
 
@@ -87,6 +88,6 @@ export class Events {
   private getHandlers(event: string) {
     return this.handlers.get(event) ??
       this.handlers.set(event, new Set())
-          .get(event)!;
+        .get(event)!;
   }
 }
